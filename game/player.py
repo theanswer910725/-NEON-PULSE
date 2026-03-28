@@ -43,6 +43,13 @@ class Player(pygame.sprite.Sprite):
         self.pos += self.vel
         self.rect.center = (int(self.pos.x), int(self.pos.y))
 
+        if self.pos.x < PLAYER_SIZE // 2:
+            self.pos.x = PLAYER_SIZE // 2
+            self.vel.x = 0
+        if self.pos.x > SCREEN_WIDTH - PLAYER_SIZE // 2:
+            self.pos.x = SCREEN_WIDTH - PLAYER_SIZE // 2
+            self.vel.x = 0
+
         if self.invincible:
             self.invincible_timer -= 1
             if self.invincible_timer <= 0:
@@ -67,6 +74,8 @@ class Player(pygame.sprite.Sprite):
     def take_damage(self):
         if not self.invincible:
             self.health -= 1
+            if self.health < 0:
+                self.health = 0
             self.invincible = True
             self.invincible_timer = INVINCIBILITY_TIME
 

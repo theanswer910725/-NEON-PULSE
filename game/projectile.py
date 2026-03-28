@@ -24,6 +24,11 @@ class Projectile(pygame.sprite.Sprite):
     def update(self, particles):
         self.pos += self.vel
         self.rect.center = (int(self.pos.x), int(self.pos.y))
+
+        if (self.pos.x < -50 or self.pos.x > SCREEN_WIDTH + 50 or
+            self.pos.y < -50 or self.pos.y > SCREEN_HEIGHT + 50):
+            self.kill()
+
         self.trail_timer += 1
         if self.trail_timer % 3 == 0 and particles:
             particles.emit(int(self.pos.x), int(self.pos.y), CYAN, 2, 0.3)
