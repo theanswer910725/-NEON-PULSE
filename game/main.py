@@ -58,6 +58,9 @@ class Game:
                     enemy.die()
                     self.particles.emit(int(enemy.pos.x), int(enemy.pos.y), MAGENTA, 15, 1.5)
                     bullet.kill()
+        for enemy in self.enemies:
+            if enemy.alive and self.player.rect.colliderect(enemy.rect):
+                self.player.take_damage()
         self.particles.update()
 
     def draw(self):
