@@ -60,6 +60,10 @@ class Player(pygame.sprite.Sprite):
                     self.on_ground = True
                     self.can_double_jump = True
 
+    def attack(self, target_x, target_y, projectiles):
+        from projectile import Projectile
+        projectiles.add(Projectile(self.pos.x, self.pos.y, target_x, target_y))
+
     def take_damage(self):
         if not self.invincible:
             self.health -= 1

@@ -5,6 +5,7 @@ from player import Player
 from platform import Platform
 from particles import ParticleSystem
 from enemy import Enemy
+from projectile import Projectile
 
 class Game:
     def __init__(self):
@@ -20,6 +21,7 @@ class Game:
         self.enemies = pygame.sprite.Group()
         self.enemies.add(Enemy(600, 200))
         self.enemies.add(Enemy(400, 100))
+        self.projectiles = pygame.sprite.Group()
 
     def run(self):
         while self.running:
@@ -39,12 +41,23 @@ class Game:
                     self.running = False
                 elif event.key == pygame.K_SPACE:
                     self.player.jump()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    mx, my = event.pos
+                    self.player.attack(mx, my, self.projectiles)
 
     def update(self):
         self.player.handle_input(pygame.key.get_pressed())
         self.player.update(self.platforms)
         for e in self.enemies:
             e.update(self.player)
+        for bullet in self.projectiles:
+            bullet.update(self.particles)
+            for enemy in self.enemies:
+                if bullet.rect.colliderect(enemy.rect) and enemy.alive:
+                    enemy.die()
+                    self.particles.emit(int(enemy.pos.x), int(enemy.pos.y), MAGENTA, 15, 1.5)
+                    bullet.kill()
         self.particles.update()
 
     def draw(self):
@@ -53,6 +66,8 @@ class Game:
             platform.draw(self.screen)
         for e in self.enemies:
             e.draw(self.screen)
+        for bullet in self.projectiles:
+            bullet.draw(self.screen)
         self.player.draw(self.screen)
         self.particles.draw(self.screen)
         pygame.display.flip()
