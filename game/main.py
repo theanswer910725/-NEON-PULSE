@@ -3,6 +3,7 @@ import sys
 from constants import *
 from player import Player
 from platform import Platform
+from particles import ParticleSystem
 
 class Game:
     def __init__(self):
@@ -14,6 +15,7 @@ class Game:
         self.player = Player(100, 300)
         self.platforms = pygame.sprite.Group()
         self.platforms.add(Platform(0, 550, 800, 50))
+        self.particles = ParticleSystem()
 
     def run(self):
         while self.running:
@@ -37,12 +39,14 @@ class Game:
     def update(self):
         self.player.handle_input(pygame.key.get_pressed())
         self.player.update(self.platforms)
+        self.particles.update()
 
     def draw(self):
         self.screen.fill(BLACK)
         for platform in self.platforms:
             platform.draw(self.screen)
         self.player.draw(self.screen)
+        self.particles.draw(self.screen)
         pygame.display.flip()
 
 if __name__ == "__main__":
